@@ -20,6 +20,37 @@ module.exports = function(grunt) {
             port: '8080'
         }
     },
+    compass: {
+      dev: {
+          src: 'app/sass',
+          dest: 'app/public/css',
+          linecomments: true,
+          forcecompile: true,
+          /*
+          require: [
+            'animate-sass',
+            'mylib'
+          ],*/
+          debugsass: false,
+          images: 'img/',
+          relativeassets: true
+      },
+      prod: {
+          src: 'app/sass',
+          dest: 'dist/public/css',
+          outputstyle: 'compressed',
+          linecomments: false,
+          forcecompile: true,
+          /*
+          require: [
+            'animate-sass',
+            'mylib'
+          ],*/
+          debugsass: false,
+          images: 'img/',
+          relativeassets: true
+      }
+    },
     lint: {
       files: ['Gruntfile.js', 'lib/**/*.js', 'test/**/*.js']
     },
@@ -62,6 +93,8 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks('grunt-reload');
+  grunt.loadNpmTasks( 'grunt-compass');
+
   
   // Default task.
   grunt.registerTask('default', 'lint qunit concat min');
