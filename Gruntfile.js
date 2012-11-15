@@ -22,8 +22,9 @@ module.exports = function(grunt) {
     },
     compass: {
       dev: {
-          src: 'app/sass',
-          dest: 'app/public/css',
+          config: 'app/sass/config.rb',
+          src: '../sass',
+          dest: 'css',
           linecomments: true,
           forcecompile: true,
           /*
@@ -32,14 +33,14 @@ module.exports = function(grunt) {
             'mylib'
           ],*/
           debugsass: false,
-          images: 'img/',
+          images: 'img',
           relativeassets: true
       },
       prod: {
           src: 'app/sass',
           dest: 'dist/public/css',
           outputstyle: 'compressed',
-          linecomments: false,
+          linecomments: true,
           forcecompile: true,
           /*
           require: [
@@ -47,8 +48,8 @@ module.exports = function(grunt) {
             'mylib'
           ],*/
           debugsass: false,
-          images: 'img/',
-          relativeassets: true
+          //images: 'app/public/img',
+          relativeassets: false
       }
     },
     lint: {
@@ -70,8 +71,14 @@ module.exports = function(grunt) {
       }
     },
     watch: {
-      files: ['<config:lint.files>','app/public/*.html'],
-      tasks: 'reload'
+      html: {
+        files: ['<config:lint.files>','app/public/*.html'],
+        tasks: 'reload',
+      },
+      compass: {
+        files: [ 'app/sass/*.sass' ],
+        tasks: [ 'compass:dev', 'reload' ]
+      }
     },
     jshint: {
       options: {
@@ -98,5 +105,5 @@ module.exports = function(grunt) {
   
   // Default task.
   grunt.registerTask('default', 'lint qunit concat min');
-  grunt.registerTask('dev', 'reload server watch');
+  grunt.registerTask('dev', 'reload server compass:dev watch');
 };
