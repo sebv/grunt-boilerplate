@@ -10,7 +10,7 @@
   "author": "",
   "license": "BSD",
   "devDependencies": {
-    "grunt-reload": "~0.2.0",
+    "grunt-reload": "git://github.com/sebv/grunt-reload.git",
     "grunt-compass": "~0.3.7"
   }
 }

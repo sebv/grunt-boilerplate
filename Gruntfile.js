@@ -10,14 +10,15 @@ module.exports = function(grunt) {
       '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
     server: {
-      port: 8080,
+      port: 3010,
       base: './app/public',
+      keepalive: true
     },
     reload: {
-        port: 6001,
+        port: 3000,
         proxy: {
             host: 'localhost',
-            port: '8080'
+            port: '3010'
         }
     },
     compass: {
@@ -26,7 +27,7 @@ module.exports = function(grunt) {
           src: 'app/sass',
           dest: 'app/public/css',
           linecomments: true,
-          forcecompile: true,
+          forcecompile: false,
           debugsass: false,
       },
       prod: {
@@ -85,7 +86,6 @@ module.exports = function(grunt) {
     },
     uglify: {}
   });
-
   grunt.loadNpmTasks('grunt-reload');
   grunt.loadNpmTasks( 'grunt-compass');
 
@@ -93,4 +93,12 @@ module.exports = function(grunt) {
   // Default task.
   grunt.registerTask('default', 'lint qunit concat min');
   grunt.registerTask('dev', 'reload server compass:dev watch');
+  //grunt.registerTask('reload:safe', 'wait:10 reload wait:10');
+
+  grunt.registerTask('wait', 'Wait for a set amount of time(ms).', function(delay) {
+    if (delay) { 
+      var done = this.async();
+      setTimeout(done, delay ); 
+    }
+  });
 };
