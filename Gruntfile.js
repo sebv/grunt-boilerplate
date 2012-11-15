@@ -23,33 +23,20 @@ module.exports = function(grunt) {
     compass: {
       dev: {
           config: 'app/sass/config.rb',
-          src: '../sass',
-          dest: 'css',
+          src: 'app/sass',
+          dest: 'app/public/css',
           linecomments: true,
           forcecompile: true,
-          /*
-          require: [
-            'animate-sass',
-            'mylib'
-          ],*/
           debugsass: false,
-          images: 'img',
-          relativeassets: true
       },
       prod: {
+          config: 'app/sass/config.rb',
           src: 'app/sass',
           dest: 'dist/public/css',
           outputstyle: 'compressed',
-          linecomments: true,
+          linecomments: false,
           forcecompile: true,
-          /*
-          require: [
-            'animate-sass',
-            'mylib'
-          ],*/
           debugsass: false,
-          //images: 'app/public/img',
-          relativeassets: false
       }
     },
     lint: {
