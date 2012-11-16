@@ -42,26 +42,40 @@ module.exports = function(grunt) {
           debugsass: false,
       }
     },
+    clean: {
+      dist: ['temp/dist','dist'],
+    },
+    copy: {
+      dist: {
+        files: {
+          "temp/staging": "app/public/*"
+        }
+      }
+    },
     'usemin-handler': {
-       html: 'app/public/index.html'
+      html: 'app/public/index.html',
+      img: 'app/public/img/**'
     },
     usemin: {
-      html: ['**/*.html'],
-      css: ['**/*.css']
+      html: ['temp/dist/**/*.html'],
+      css: ['temp/dist/**/*.css']
     },
+    css: {},
+    /*
     mincss: {
       compress: {
         files: {
           "temp/dist/public/css/main.min.css": ["temp/dist/public/css/main.css"]
         }
       }
-    },
+    },*/
     lint: {
       files: ['Gruntfile.js', 'lib/**/*.js', 'test/**/*.js']
     },
     qunit: {
       files: ['test/**/*.html']
     },
+     /*
     concat: {
       dist: {
         src: [ 'app/public/js/boot/*.js',
@@ -75,7 +89,7 @@ module.exports = function(grunt) {
         src: ['<config:concat.dist.dest>'],
         dest: 'temp/dist/js/<%= pkg.name %>.min.js'
       }
-    },
+    },*/
     watch: {
       html: {
         files: ['<config:lint.files>','app/public/*.html'],
@@ -102,14 +116,16 @@ module.exports = function(grunt) {
       },
       globals: {}
     },
-    uglify: {}
+    //uglify: {}
   });
 
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-reload');
   grunt.loadNpmTasks( 'grunt-compass');
   grunt.loadNpmTasks('grunt-contrib-mincss');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-usemin');
+  grunt.loadNpmTasks('grunt-contrib-usemin');
 
   // Default task.
   //grunt.registerTask('default', 'lint qunit concat min');
