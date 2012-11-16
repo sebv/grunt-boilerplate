@@ -25,19 +25,35 @@ module.exports = function(grunt) {
       dev: {
           config: 'app/sass/config.rb',
           src: 'app/sass',
+          specify: 'app/sass/main.sass',
           dest: 'app/public/css',
           linecomments: true,
           forcecompile: false,
           debugsass: false,
       },
-      prod: {
+      dist: {
           config: 'app/sass/config.rb',
           src: 'app/sass',
-          dest: 'dist/public/css',
+          specify: 'app/sass/main.sass',
+          dest: 'temp/dist/public/css',
           outputstyle: 'compressed',
           linecomments: false,
           forcecompile: true,
           debugsass: false,
+      }
+    },
+    'usemin-handler': {
+       html: 'app/public/index.html'
+    },
+    usemin: {
+      html: ['**/*.html'],
+      css: ['**/*.css']
+    },
+    mincss: {
+      compress: {
+        files: {
+          "temp/dist/public/css/main.min.css": ["temp/dist/public/css/main.css"]
+        }
       }
     },
     lint: {
@@ -48,14 +64,16 @@ module.exports = function(grunt) {
     },
     concat: {
       dist: {
-        src: ['<file_strip_banner:lib/<%= pkg.name %>.js>'],
-        dest: 'dist/<%= pkg.name %>.js'
+        src: [ 'app/public/js/boot/*.js',
+               'app/public/js/*.js',
+               'app/public/js/vendor/bootstrap/*.js' ],
+        dest: 'temp/dist/js/<%= pkg.name %>.js'
       }
     },
     min: {
       dist: {
         src: ['<config:concat.dist.dest>'],
-        dest: 'dist/<%= pkg.name %>.min.js'
+        dest: 'temp/dist/js/<%= pkg.name %>.min.js'
       }
     },
     watch: {
@@ -86,13 +104,24 @@ module.exports = function(grunt) {
     },
     uglify: {}
   });
+
   grunt.loadNpmTasks('grunt-reload');
   grunt.loadNpmTasks( 'grunt-compass');
+  grunt.loadNpmTasks('grunt-contrib-mincss');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-usemin');
 
-  
   // Default task.
-  grunt.registerTask('default', 'lint qunit concat min');
-  grunt.registerTask('dev', 'reload server compass:dev watch');
+  //grunt.registerTask('default', 'lint qunit concat min');
+  
+  // Build task
+  grunt.registerTask('build', [
+      'clean', 
+      'compass:dist','mincss',
+      'concat','min'
+  ]);
+  
+      grunt.registerTask('develop', 'reload server compass:dev watch');
   //grunt.registerTask('reload:safe', 'wait:10 reload wait:10');
 
   grunt.registerTask('wait', 'Wait for a set amount of time(ms).', function(delay) {
@@ -101,4 +130,8 @@ module.exports = function(grunt) {
       setTimeout(done, delay ); 
     }
   });
+
+  //TODO 
+  // check grunt-contrib-htmlmin
+  //
 };

@@ -11,6 +11,9 @@
   "license": "BSD",
   "devDependencies": {
     "grunt-reload": "git://github.com/sebv/grunt-reload.git",
-    "grunt-compass": "~0.3.7"
+    "grunt-compass": "~0.3.7",
+    "grunt-contrib-mincss": "~0.3.2",
+    "grunt-contrib-clean": "~0.3.1",
+    "grunt-usemin": "git://github.com/sethetter/grunt-usemin.git"
   }
 }
