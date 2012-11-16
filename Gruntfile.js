@@ -48,17 +48,17 @@ module.exports = function(grunt) {
     copy: {
       dist: {
         files: {
-          "temp/staging": "app/public/*"
+          "temp/staging/": "app/public/**"
         }
       }
     },
     'usemin-handler': {
-      html: 'app/public/index.html',
-      img: 'app/public/img/**'
+      html: 'temp/staging/index.html',
+      img: 'temp/staging/img/**'
     },
     usemin: {
-      html: ['temp/dist/**/*.html'],
-      css: ['temp/dist/**/*.css']
+      html: ['temp/staging/**/*.html'],
+      css: ['temp/staging/**/*.css']
     },
     css: {},
     /*
