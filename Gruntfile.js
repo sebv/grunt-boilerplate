@@ -131,9 +131,7 @@ module.exports = function(grunt) {
          dest:  "temp/staging/step2/",
          src: [
            "temp/staging/step1/*",
-           "temp/staging/step1/css/app.min.css",
-           "temp/staging/step1/ico/**",
-           "temp/staging/step1/js/**/*.min.js",
+           "temp/staging/step1/**/*.min.*"
          ]
       }
     },
