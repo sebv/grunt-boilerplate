@@ -3,12 +3,26 @@ module.exports = function(grunt) {
 
   // Project configuration.
   grunt.initConfig({
+
+    ///////////////////////////////
+    //
+    // Global Config
+    //
+    ////////////////////////////////
+    
     pkg: '<json:package.json>',
     banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
       '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
       '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
       '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
+    
+    ///////////////////////////////
+    //
+    // Server/Reload
+    //
+    ////////////////////////////////
+
     server: {
       port: 3010,
       base: './app/public',
@@ -21,6 +35,13 @@ module.exports = function(grunt) {
             port: '3010'
         }
     },
+    
+    ///////////////////////////////
+    //
+    // Compass
+    //
+    ////////////////////////////////
+    
     compass: {
       dev: {
           config: 'app/sass/config.rb',
@@ -39,57 +60,19 @@ module.exports = function(grunt) {
           outputstyle: 'compressed',
           linecomments: false,
           forcecompile: true,
-          debugsass: false,
+          debugsass: false
       }
     },
-    clean: {
-      dist: ['temp/dist','dist'],
-    },
-    copy: {
-      dist: {
-        files: {
-          "temp/staging/": "app/public/**"
-        }
-      }
-    },
-    'usemin-handler': {
-      html: 'temp/staging/index.html',
-      img: 'temp/staging/img/**'
-    },
-    usemin: {
-      html: ['temp/staging/**/*.html'],
-      css: ['temp/staging/**/*.css']
-    },
-    css: {},
-    /*
-    mincss: {
-      compress: {
-        files: {
-          "temp/dist/public/css/main.min.css": ["temp/dist/public/css/main.css"]
-        }
-      }
-    },*/
+
+    ///////////////////////////////
+    //
+    // Dev 
+    //
+    ////////////////////////////////
+    
     lint: {
       files: ['Gruntfile.js', 'lib/**/*.js', 'test/**/*.js']
     },
-    qunit: {
-      files: ['test/**/*.html']
-    },
-     /*
-    concat: {
-      dist: {
-        src: [ 'app/public/js/boot/*.js',
-               'app/public/js/*.js',
-               'app/public/js/vendor/bootstrap/*.js' ],
-        dest: 'temp/dist/js/<%= pkg.name %>.js'
-      }
-    },
-    min: {
-      dist: {
-        src: ['<config:concat.dist.dest>'],
-        dest: 'temp/dist/js/<%= pkg.name %>.min.js'
-      }
-    },*/
     watch: {
       html: {
         files: ['<config:lint.files>','app/public/*.html'],
@@ -117,6 +100,73 @@ module.exports = function(grunt) {
       globals: {}
     },
     //uglify: {}
+    //
+    
+    ///////////////////////////////
+    //
+    // Test 
+    //
+    ////////////////////////////////
+
+
+    qunit: {
+      files: ['test/**/*.html']
+    },
+
+    /////////////////////////////////
+    //
+    // Build
+    //
+    ////////////////////////////////
+    clean: {
+      dist: ['temp/staging','dist'],
+    },
+    copy: {
+      dist: {
+        'step-1': {
+          files: {
+            "temp/staging/": "app/public/**"
+          }
+        }
+      }
+    },
+    rev: {
+      js: 'temp/staging/js/**/*.js',
+      css: 'temp/staging/css/**/*.css',
+      img: 'temp/staging/img/**'
+    },
+    'usemin-handler': {
+      options: {
+        target: 'temp/staging/step1'
+      },
+      html: 'app/public/index.html',
+      //img: 'temp/staging/img/**'
+    },
+    usemin: {
+      html: ['temp/staging/**/*.html'],
+      css: ['temp/staging/**/*.css']
+    },
+    /*
+
+    
+    mincss: {
+      compress: {
+        files: {
+          "temp/dist/public/css/main.min.css": ["temp/dist/public/css/main.css"]
+        }
+      }
+    },
+    concat: {
+      dist: {
+        src: [],
+        dest: 'temp/staging/js/app.js'
+      }
+    },
+    min: {
+      dist: {
+        src: [],
+        dest: 'temp/dist/js/app.min.js'
+      }*/
   });
 
   grunt.loadNpmTasks('grunt-contrib-clean');
@@ -132,9 +182,9 @@ module.exports = function(grunt) {
   
   // Build task
   grunt.registerTask('build', [
-      'clean', 
-      'compass:dist','mincss',
-      'concat','min'
+      'clean:dist', 'copy:dist:step1',
+      //'compass:dist','mincss',
+      'usemin-handler','concat','mincss', 'min', 'usemin'
   ]);
   
       grunt.registerTask('develop', 'reload server compass:dev watch');
