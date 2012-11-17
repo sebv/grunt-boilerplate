@@ -146,6 +146,13 @@ module.exports = function(grunt) {
       img: 'img/**',
       ico: 'ico/**'
     },
+    imgmin: {
+      options: {
+        baseDir: 'temp/staging/step1'
+      },
+      img: 'img/**',
+      ico: 'ico/**'
+    },
     'usemin-handler': {
       options: {
         baseDir: 'temp/staging/step1'
@@ -190,6 +197,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-usemin');
   grunt.loadNpmTasks('grunt-contrib-rev');
+  grunt.loadNpmTasks('grunt-contrib-imagemin');
 
 
   // Default task.
@@ -199,7 +207,7 @@ module.exports = function(grunt) {
   grunt.registerTask('build', [
       'clean:dist', 'copy:dist-step-1',
       //'compass:dist','mincss',
-      'usemin-handler','concat','mincss', 'min',
+      'usemin-handler','concat','mincss', 'min', 'imgmin',
       'copy:dist-step-2', 'rev', 'usemin'
   ]);
   
