@@ -1,3 +1,4 @@
+var path = require('path');
 /*global module:false*/
 module.exports = function(grunt) {
 
@@ -122,29 +123,41 @@ module.exports = function(grunt) {
       dist: ['temp/staging','dist'],
     },
     copy: {
-      dist: {
-        'step-1': {
-          files: {
-            "temp/staging/": "app/public/**"
-          }
-        }
+      'dist-step-1': {
+         dest: "temp/staging/step1/",
+         src: ["app/public/**"]
+      },
+      'dist-step-2': {
+         dest:  "temp/staging/step2/",
+         src: [
+           "temp/staging/step1/*",
+           "temp/staging/step1/css/app.min.css",
+           "temp/staging/step1/ico/**",
+           "temp/staging/step1/js/**/*.min.js",
+         ]
       }
     },
     rev: {
-      js: 'temp/staging/js/**/*.js',
-      css: 'temp/staging/css/**/*.css',
-      img: 'temp/staging/img/**'
+      options: {
+        baseDir: 'temp/staging/step2'
+      },
+      js: 'js/**/*.js',
+      css: 'css/**/*.css',
+      img: 'img/**',
+      ico: 'ico/**'
     },
     'usemin-handler': {
       options: {
-        target: 'temp/staging/step1'
+        baseDir: 'temp/staging/step1'
       },
-      html: 'app/public/index.html',
-      //img: 'temp/staging/img/**'
+      html: '*.html',
     },
     usemin: {
-      html: ['temp/staging/**/*.html'],
-      css: ['temp/staging/**/*.css']
+      options: {
+        baseDir: 'temp/staging/step2'
+      },
+      html: ['**/*.html'],
+      css: ['**/*.css']
     },
     /*
 
@@ -176,15 +189,18 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-mincss');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-usemin');
+  grunt.loadNpmTasks('grunt-contrib-rev');
+
 
   // Default task.
   //grunt.registerTask('default', 'lint qunit concat min');
   
   // Build task
   grunt.registerTask('build', [
-      'clean:dist', 'copy:dist:step1',
+      'clean:dist', 'copy:dist-step-1',
       //'compass:dist','mincss',
-      'usemin-handler','concat','mincss', 'min', 'usemin'
+      'usemin-handler','concat','mincss', 'min',
+      'copy:dist-step-2', 'rev', 'usemin'
   ]);
   
       grunt.registerTask('develop', 'reload server compass:dev watch');
