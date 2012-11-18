@@ -20,7 +20,8 @@ module.exports = function(grunt) {
     dirs: {
       root: 'app/public',
       staging: 'temp/staging',
-      dist: 'dist'
+      dist: 'dist',
+      sass: 'app/sass'
     },
     ///////////////////////////////
     //
@@ -41,7 +42,7 @@ module.exports = function(grunt) {
       },
       dist: {
         port: 3002,
-        base: '<%= dirs.dist %>',
+        base: '<%= dirs.dist %>/public',
         keepalive: true
       }
     },
@@ -63,19 +64,19 @@ module.exports = function(grunt) {
     
     compass: {
       dev: {
-          config: 'app/sass/config.rb',
-          src: 'app/sass',
-          specify: 'app/sass/main.sass',
-          dest: 'app/public/css',
+          config: '<%= dirs.sass %>/config.rb',
+          src: '<%= dirs.sass %>',
+          specify: '<%= dirs.sass %>/main.sass',
+          dest: '<%= dirs.root %>/css',
           linecomments: true,
           forcecompile: false,
           debugsass: false,
       },
       dist: {
-          config: 'app/sass/config.rb',
-          src: 'app/sass',
-          specify: 'app/sass/main.sass',
-          dest: 'temp/dist/public/css',
+          config: '<%= dirs.sass %>/config.rb',
+          src: '<%= dirs.sass %>',
+          specify: '<%= dirs.sass %>/main.sass',
+          dest: '<%= dirs.staging %>/step1/css',
           outputstyle: 'compressed',
           linecomments: false,
           forcecompile: true,
@@ -94,11 +95,11 @@ module.exports = function(grunt) {
     },
     watch: {
       html: {
-        files: ['<config:lint.files>','app/public/*.html'],
+        files: ['<config:lint.files>','<%= dirs.root %>/*.html'],
         tasks: 'reload',
       },
       compass: {
-        files: [ 'app/sass/*.sass' ],
+        files: [ '<%= dirs.sass %>/*.sass' ],
         tasks: [ 'compass:dev', 'reload' ]
       }
     },
@@ -143,7 +144,7 @@ module.exports = function(grunt) {
     copy: {
       'dist-step-1': {
          dest: '<%= dirs.staging %>/step1/',
-         src: ['<%= dirs.root %>/**']
+         src: ['<%= dirs.root %>/**','!<%= dirs.root %>/css/**']
       },
       'dist-step-2': {
          dest:  "<%= dirs.staging %>/step2/",
@@ -209,12 +210,11 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-manifest');
 
   // Default task.
-  //grunt.registerTask('default', 'lint qunit concat min');
+  grunt.registerTask('default', 'dev');
   
   // Build task
   grunt.registerTask('build', [
-      'clean:dist', 'copy:dist-step-1',
-      //'compass:dist','mincss',
+      'clean:dist', 'copy:dist-step-1', 'compass:dist',
       'usemin-handler', 'concat', 'mincss', 'uglify', 'imgmin',
       'copy:dist-step-2', 'rev', 'usemin', 'server:build', 'manifest',
       'copy:dist-final'
