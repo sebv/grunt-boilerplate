@@ -185,7 +185,7 @@ module.exports = function(grunt) {
     // generate application cache manifest
     manifest:{
       dest: '<%= dirs.staging %>/step2/manifest',
-      port: 3012
+      port: 3001
     },
 
     /*
@@ -233,7 +233,7 @@ module.exports = function(grunt) {
       'clean:dist', 'copy:dist-step-1',
       //'compass:dist','mincss',
       'usemin-handler','concat','mincss', 'uglify', 'imgmin',
-      'copy:dist-step-2','rev','usemin', 'server:build' //, 'manifest'
+      'copy:dist-step-2','rev','usemin', 'server:build', 'manifest'
   ]);
   
   grunt.registerTask('dev', 'reload server compass:dev watch');
