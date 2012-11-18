@@ -218,7 +218,8 @@ module.exports = function(grunt) {
       'clean:dist', 'copy:dist-step-1', 'compass:dist',
       'usemin-handler', 'concat', 'mincss', 'uglify', 'imgmin',
       'copy:dist-step-2', 'rev', 'usemin', 'server:build', 'manifest',
-      'copy:dist-final'
+      'copy:dist-final', 'time'
+
   ]);
   
   grunt.registerTask('dev', ['jshint', 'compass:dev', 'reload:dev', 'server:dev', 'watch']);
@@ -231,6 +232,11 @@ module.exports = function(grunt) {
       var done = this.async();
       setTimeout(done, delay ); 
     }
+  });
+
+  var now = +new Date();
+  grunt.registerTask('time', 'Print sucess status with elapsed time', function() {
+    grunt.log.ok('Build success. Done in ' + ((+new Date() - now) / 1000) + 's');
   });
 
   grunt.renameTask('connect', 'server');
