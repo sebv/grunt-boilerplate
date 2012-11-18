@@ -184,7 +184,7 @@ module.exports = function(grunt) {
     },
     // generate application cache manifest
     manifest:{
-      dest: '<%= dirs.staging %>/step2/manifest',
+      dest: '<%= dirs.staging %>/step2/manifest.appcache',
       port: 3001
     },
 
