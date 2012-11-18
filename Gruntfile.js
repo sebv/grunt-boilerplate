@@ -151,6 +151,10 @@ module.exports = function(grunt) {
            "<%= dirs.staging %>/step1/*",
            "<%= dirs.staging %>/step1/**/*.min.*"
          ]
+      },
+      'dist-final': {
+         dest:  "<%= dirs.dist %>/public/",
+         src: ["<%= dirs.staging %>/step2/**"]
       }
     },
     'usemin-handler': {
@@ -188,27 +192,6 @@ module.exports = function(grunt) {
       port: 3001
     },
 
-    /*
-
-    
-    mincss: {
-      compress: {
-        files: {
-          "temp/dist/public/css/main.min.css": ["temp/dist/public/css/main.css"]
-        }
-      }
-    },
-    concat: {
-      dist: {
-        src: [],
-        dest: 'temp/staging/js/app.js'
-      }
-    },
-    min: {
-      dist: {
-        src: [],
-        dest: 'temp/dist/js/app.min.js'
-      }*/
   });
 
   grunt.loadNpmTasks('grunt-contrib-clean');
@@ -232,8 +215,9 @@ module.exports = function(grunt) {
   grunt.registerTask('build', [
       'clean:dist', 'copy:dist-step-1',
       //'compass:dist','mincss',
-      'usemin-handler','concat','mincss', 'uglify', 'imgmin',
-      'copy:dist-step-2','rev','usemin', 'server:build', 'manifest'
+      'usemin-handler', 'concat', 'mincss', 'uglify', 'imgmin',
+      'copy:dist-step-2', 'rev', 'usemin', 'server:build', 'manifest',
+      'copy:dist-final'
   ]);
   
   grunt.registerTask('dev', 'reload server compass:dev watch');
