@@ -20,7 +20,8 @@
     "grunt-contrib-usemin": "git://github.com/sebv/grunt-contrib-usemin.git",
     "grunt-contrib-uglify": "~0.1.0",
     "grunt-contrib-connect": "git://github.com/sebv/grunt-contrib-connect.git",
-    "grunt-contrib-manifest": "git://github.com/sebv/grunt-contrib-manifest.git"
+    "grunt-contrib-manifest": "git://github.com/sebv/grunt-contrib-manifest.git",
+    "grunt-contrib-jshint": "~0.1.0"
   },
   "dependencies": {
     "grunt-contrib-concat": "~0.1.1"

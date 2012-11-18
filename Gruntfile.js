@@ -70,7 +70,7 @@ module.exports = function(grunt) {
           dest: '<%= dirs.root %>/css',
           linecomments: true,
           forcecompile: false,
-          debugsass: false,
+          debugsass: false
       },
       dist: {
           config: '<%= dirs.sass %>/config.rb',
@@ -89,14 +89,10 @@ module.exports = function(grunt) {
     // Dev 
     //
     ////////////////////////////////
-    
-    lint: {
-      files: ['Gruntfile.js', 'lib/**/*.js', 'test/**/*.js']
-    },
     watch: {
       html: {
         files: ['<config:lint.files>','<%= dirs.root %>/*.html'],
-        tasks: 'reload',
+        tasks: 'reload'
       },
       compass: {
         files: [ '<%= dirs.sass %>/*.sass' ],
@@ -115,9 +111,14 @@ module.exports = function(grunt) {
         undef: true,
         boss: true,
         eqnull: true,
-        browser: true
+        browser: true,
+        globals: {
+          require: true
+        }
       },
-      globals: {}
+      all: [  'Gruntfile.js', 
+                '<%= dirs.root %>/js/**/*.js', 
+                '!<%= dirs.root %>/js/vendor/**']
     },
     //uglify: {}
     //
@@ -139,7 +140,7 @@ module.exports = function(grunt) {
     //
     ////////////////////////////////
     clean: {
-      dist: ['<%= dirs.staging %>','<%= dirs.dist %>'],
+      dist: ['<%= dirs.staging %>','<%= dirs.dist %>']
     },
     copy: {
       'dist-step-1': {
@@ -162,7 +163,7 @@ module.exports = function(grunt) {
       options: {
         basePath: '<%= dirs.staging %>/step1'
       },
-      html: '*.html',
+      html: '*.html'
     },
     imgmin: {
       options: {
@@ -191,7 +192,7 @@ module.exports = function(grunt) {
     manifest:{
       dest: '<%= dirs.staging %>/step2/manifest.appcache',
       port: 3001
-    },
+    }
 
   });
 
@@ -199,6 +200,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-reload');
   grunt.loadNpmTasks( 'grunt-compass');
@@ -214,6 +216,7 @@ module.exports = function(grunt) {
   
   // Build task
   grunt.registerTask('build', [
+      'jshint',
       'clean:dist', 'copy:dist-step-1', 'compass:dist',
       'usemin-handler', 'concat', 'mincss', 'uglify', 'imgmin',
       'copy:dist-step-2', 'rev', 'usemin', 'server:build', 'manifest',
