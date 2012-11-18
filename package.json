@@ -23,9 +23,8 @@
     "grunt-contrib-manifest": "git://github.com/sebv/grunt-contrib-manifest.git",
     "grunt-contrib-jshint": "~0.1.0",
     "grunt-contrib-watch": "~0.1.4",
-    "grunt-contrib-htmlmin": "git://github.com/sebv/grunt-contrib-htmlmin.git"
-  },
-  "dependencies": {
+    "grunt-contrib-htmlmin": "git://github.com/sebv/grunt-contrib-htmlmin.git",
     "grunt-contrib-concat": "~0.1.1"
-  }
+  },
+  "dependencies": {}
 }
