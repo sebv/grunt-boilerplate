@@ -120,8 +120,6 @@ module.exports = function(grunt) {
                 '<%= dirs.root %>/js/**/*.js', 
                 '!<%= dirs.root %>/js/vendor/**']
     },
-    //uglify: {}
-    //
     
     ///////////////////////////////
     //
@@ -202,6 +200,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-reload');
   grunt.loadNpmTasks( 'grunt-compass');
   grunt.loadNpmTasks('grunt-contrib-mincss');
@@ -223,7 +222,7 @@ module.exports = function(grunt) {
       'copy:dist-final'
   ]);
   
-  grunt.registerTask('dev', 'reload server compass:dev watch');
+  grunt.registerTask('dev', ['jshint', 'compass:dev', 'reload:dev', 'server:dev', 'watch']);
   //grunt.registerTask('reload:safe', 'wait:10 reload wait:10');
 
   grunt.registerTask('wait', 'Wait for a set amount of time(ms).', function(delay) {
