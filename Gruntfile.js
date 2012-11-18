@@ -27,18 +27,30 @@ module.exports = function(grunt) {
     // Server/Reload
     //
     ////////////////////////////////
-
+    
     server: {
-      port: 3010,
-      base: './app/public',
-      keepalive: true
+      dev: {
+        port: 3000,
+        base: '<%= dirs.root %>',
+        keepalive: true
+      },
+      build: {
+        port: 3001,
+        base: '<%= dirs.staging %>/step2',
+        keepalive: false
+      },
+      dist: {
+        port: 3002,
+        base: '<%= dirs.dist %>',
+        keepalive: true
+      }
     },
     reload: {
       dev: {
-        port: 3000,
+        port: 4000,
         proxy: {
             host: 'localhost',
-            port: '3010'
+            port: '3000'
         }
       }
     },
@@ -202,6 +214,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-reload');
   grunt.loadNpmTasks( 'grunt-compass');
@@ -220,10 +233,10 @@ module.exports = function(grunt) {
       'clean:dist', 'copy:dist-step-1',
       //'compass:dist','mincss',
       'usemin-handler','concat','mincss', 'uglify', 'imgmin',
-      'copy:dist-step-2','rev','usemin',// 'server:step-2' , 'manifest'
+      'copy:dist-step-2','rev','usemin', 'server:build' //, 'manifest'
   ]);
   
-      grunt.registerTask('develop', 'reload server compass:dev watch');
+  grunt.registerTask('dev', 'reload server compass:dev watch');
   //grunt.registerTask('reload:safe', 'wait:10 reload wait:10');
 
   grunt.registerTask('wait', 'Wait for a set amount of time(ms).', function(delay) {
@@ -232,6 +245,8 @@ module.exports = function(grunt) {
       setTimeout(done, delay ); 
     }
   });
+
+  grunt.renameTask('connect', 'server');
 
   //TODO 
   // check grunt-contrib-htmlmin

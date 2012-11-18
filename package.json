@@ -18,7 +18,8 @@
     "grunt-contrib-rev": "git://github.com/sebv/grunt-contrib-rev.git",
     "grunt-contrib-imagemin": "git://github.com/sebv/grunt-contrib-imagemin.git",
     "grunt-contrib-usemin": "git://github.com/sebv/grunt-contrib-usemin.git",
-    "grunt-contrib-uglify": "~0.1.0"
+    "grunt-contrib-uglify": "~0.1.0",
+    "grunt-contrib-connect": "git://github.com/sebv/grunt-contrib-connect.git"
   },
   "dependencies": {
     "grunt-contrib-concat": "~0.1.1"
