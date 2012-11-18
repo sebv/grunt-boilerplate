@@ -17,7 +17,11 @@ module.exports = function(grunt) {
       '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
       '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
       ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
-    
+    dirs: {
+      root: 'app/public',
+      staging: 'temp/staging',
+      dist: 'dist'
+    },
     ///////////////////////////////
     //
     // Server/Reload
@@ -30,11 +34,13 @@ module.exports = function(grunt) {
       keepalive: true
     },
     reload: {
+      dev: {
         port: 3000,
         proxy: {
             host: 'localhost',
             port: '3010'
         }
+      }
     },
     
     ///////////////////////////////
@@ -120,24 +126,37 @@ module.exports = function(grunt) {
     //
     ////////////////////////////////
     clean: {
-      dist: ['temp/staging','dist'],
+      dist: ['<%= dirs.staging %>','<%= dirs.dist %>'],
     },
     copy: {
       'dist-step-1': {
-         dest: "temp/staging/step1/",
-         src: ["app/public/**"]
+         dest: '<%= dirs.staging %>/step1/',
+         src: ['<%= dirs.root %>/**']
       },
       'dist-step-2': {
-         dest:  "temp/staging/step2/",
+         dest:  "<%= dirs.staging %>/step2/",
          src: [
-           "temp/staging/step1/*",
-           "temp/staging/step1/**/*.min.*"
+           "<%= dirs.staging %>/step1/*",
+           "<%= dirs.staging %>/step1/**/*.min.*"
          ]
       }
     },
+    'usemin-handler': {
+      options: {
+        basePath: '<%= dirs.staging %>/step1'
+      },
+      html: '*.html',
+    },
+    usemin: {
+      options: {
+        basePath: '<%= dirs.staging %>/step2'
+      },
+      html: ['**/*.html'],
+      css: ['**/*.css']
+    },
     rev: {
       options: {
-        baseDir: 'temp/staging/step2'
+        basePath: '<%= dirs.staging %>/step2'
       },
       js: 'js/**/*.js',
       css: 'css/**/*.css',
@@ -146,24 +165,17 @@ module.exports = function(grunt) {
     },
     imgmin: {
       options: {
-        baseDir: 'temp/staging/step1'
+        basePath: 'temp/staging/step1'
       },
       img: 'img/**',
       ico: 'ico/**'
     },
-    'usemin-handler': {
-      options: {
-        baseDir: 'temp/staging/step1'
-      },
-      html: '*.html',
+    // generate application cache manifest
+    manifest:{
+      dest: 'temp/staging/step2/manifest',
+      port: 3012
     },
-    usemin: {
-      options: {
-        baseDir: 'temp/staging/step2'
-      },
-      html: ['**/*.html'],
-      css: ['**/*.css']
-    },
+
     /*
 
     
@@ -189,6 +201,8 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-reload');
   grunt.loadNpmTasks( 'grunt-compass');
   grunt.loadNpmTasks('grunt-contrib-mincss');
@@ -196,7 +210,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-usemin');
   grunt.loadNpmTasks('grunt-contrib-rev');
   grunt.loadNpmTasks('grunt-contrib-imagemin');
-
+  grunt.loadNpmTasks('grunt-contrib-manifest');
 
   // Default task.
   //grunt.registerTask('default', 'lint qunit concat min');
@@ -205,8 +219,8 @@ module.exports = function(grunt) {
   grunt.registerTask('build', [
       'clean:dist', 'copy:dist-step-1',
       //'compass:dist','mincss',
-      'usemin-handler','concat','mincss', 'min', 'imgmin',
-      'copy:dist-step-2', 'rev', 'usemin'
+      'usemin-handler','concat','mincss', 'uglify', 'imgmin',
+      'copy:dist-step-2','rev','usemin',// 'server:step-2' , 'manifest'
   ]);
   
       grunt.registerTask('develop', 'reload server compass:dev watch');
