@@ -31,27 +31,27 @@ module.exports = function(grunt) {
     
     server: {
       dev: {
-        port: 3000,
+        port: 3001,
         base: '<%= dirs.root %>',
         keepalive: true
       },
       build: {
-        port: 3001,
+        port: 3002,
         base: '<%= dirs.staging %>/step2',
         keepalive: false
       },
       dist: {
-        port: 3002,
+        port: 3000,
         base: '<%= dirs.dist %>/public',
         keepalive: true
       }
     },
     reload: {
       dev: {
-        port: 4000,
+        port: 3000,
         proxy: {
             host: 'localhost',
-            port: '3000'
+            port: '3001'
         }
       }
     },
@@ -224,6 +224,8 @@ module.exports = function(grunt) {
   
   grunt.registerTask('dev', ['jshint', 'compass:dev', 'reload:dev', 'server:dev', 'watch']);
   //grunt.registerTask('reload:safe', 'wait:10 reload wait:10');
+
+  grunt.registerTask('dist', ['server:dist']);
 
   grunt.registerTask('wait', 'Wait for a set amount of time(ms).', function(delay) {
     if (delay) { 
