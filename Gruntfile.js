@@ -147,6 +147,13 @@ module.exports = function(grunt) {
       },
       html: '*.html',
     },
+    imgmin: {
+      options: {
+        basePath: '<%= dirs.staging %>/step1'
+      },
+      img: 'img/**',
+      ico: 'ico/**'
+    },
     usemin: {
       options: {
         basePath: '<%= dirs.staging %>/step2'
@@ -163,16 +170,9 @@ module.exports = function(grunt) {
       img: 'img/**',
       ico: 'ico/**'
     },
-    imgmin: {
-      options: {
-        basePath: 'temp/staging/step1'
-      },
-      img: 'img/**',
-      ico: 'ico/**'
-    },
     // generate application cache manifest
     manifest:{
-      dest: 'temp/staging/step2/manifest',
+      dest: '<%= dirs.staging %>/step2/manifest',
       port: 3012
     },
 
