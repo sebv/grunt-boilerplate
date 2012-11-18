@@ -37,7 +37,7 @@ module.exports = function(grunt) {
       },
       build: {
         port: 3002,
-        base: '<%= dirs.staging %>/step2',
+        base: '<%= dirs.staging %>/step3',
         keepalive: false
       },
       dist: {
@@ -153,9 +153,16 @@ module.exports = function(grunt) {
            "<%= dirs.staging %>/step1/ico/**"
          ]
       },
+      'dist-step-3': {
+         dest:  "<%= dirs.staging %>/step3/",
+         src: [
+           "<%= dirs.staging %>/step2/**",
+           "!<%= dirs.staging %>/step2/**/*.html"
+         ]
+      },
       'dist-final': {
          dest:  "<%= dirs.dist %>/public/",
-         src: ["<%= dirs.staging %>/step2/**"]
+         src: ["<%= dirs.staging %>/step3/**"]
       }
     },
     'usemin-handler': {
@@ -185,9 +192,19 @@ module.exports = function(grunt) {
       css: 'css/**/*.css',
       img: 'img/**'
     },
-    // generate application cache manifest
+    htmlmin: {
+      dist: {
+        options: {
+          removeComments: true,
+          collapseWhitespace: true
+        },
+        files: {
+          '<%= dirs.staging %>/step3/': '<%= dirs.staging %>/step2/**/*.html'
+        }
+      }
+    },
     manifest:{
-      dest: '<%= dirs.staging %>/step2/manifest.appcache',
+      dest: '<%= dirs.staging %>/step3/manifest.appcache',
       port: 3001
     }
 
@@ -207,6 +224,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-usemin');
   grunt.loadNpmTasks('grunt-contrib-rev');
   grunt.loadNpmTasks('grunt-contrib-imagemin');
+  grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-contrib-manifest');
 
   // Default task.
@@ -214,10 +232,10 @@ module.exports = function(grunt) {
   
   // Build task
   grunt.registerTask('build', [
-      'jshint',
-      'clean:dist', 'copy:dist-step-1', 'compass:dist',
-      'usemin-handler', 'concat', 'mincss', 'uglify', 'imgmin',
-      'copy:dist-step-2', 'rev', 'usemin', 'server:build', 'manifest',
+      'jshint', 'clean:dist',
+      'copy:dist-step-1', 'compass:dist', 'usemin-handler', 'concat', 'mincss', 'uglify', 'imgmin',
+      'copy:dist-step-2', 'rev', 'usemin', 
+      'copy:dist-step-3', 'htmlmin:dist', 'server:build', 'manifest',
       'copy:dist-final', 'time'
 
   ]);
