@@ -1,3 +1,5 @@
+'use strict';
+
 var path = require('path');
 /*global module:false*/
 module.exports = function(grunt) {
@@ -112,13 +114,15 @@ module.exports = function(grunt) {
         boss: true,
         eqnull: true,
         browser: true,
+        //globalstrict: true,
         globals: {
-          require: true
+          require: true,
+          angular: true,
         }
       },
       all: [  'Gruntfile.js', 
-                '<%= dirs.root %>/js/**/*.js', 
-                '!<%= dirs.root %>/js/vendor/**']
+                '<%= dirs.root %>/js/**/*.js' 
+           ]
     },
     
     ///////////////////////////////
@@ -150,6 +154,7 @@ module.exports = function(grunt) {
          src: [
            "<%= dirs.staging %>/step1/*",
            "<%= dirs.staging %>/step1/**/*.min.*",
+           "!<%= dirs.staging %>/step1/lib/angular/angular-*.js",
            "<%= dirs.staging %>/step1/ico/**"
          ]
       },
@@ -232,7 +237,7 @@ module.exports = function(grunt) {
   
   // Build task
   grunt.registerTask('build', [
-      'jshint', 'clean:dist',
+      /*'jshint',*/ 'clean:dist',
       'copy:dist-step-1', 'compass:dist', 'usemin-handler', 'concat', 'mincss', 'uglify', 'imgmin',
       'copy:dist-step-2', 'rev', 'usemin', 
       'copy:dist-step-3', 'htmlmin:dist', 'server:build', 'manifest',
@@ -240,7 +245,7 @@ module.exports = function(grunt) {
 
   ]);
   
-  grunt.registerTask('dev', ['jshint', 'compass:dev', 'reload:dev', 'server:dev', 'watch']);
+  grunt.registerTask('dev', [/*'jshint',*/ 'compass:dev', 'reload:dev', 'server:dev', 'watch']);
   //grunt.registerTask('reload:safe', 'wait:10 reload wait:10');
 
   grunt.registerTask('dist', ['server:dist']);
@@ -259,7 +264,4 @@ module.exports = function(grunt) {
 
   grunt.renameTask('connect', 'server');
 
-  //TODO 
-  // check grunt-contrib-htmlmin
-  //
 };
