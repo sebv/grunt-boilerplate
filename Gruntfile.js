@@ -219,7 +219,7 @@ module.exports = function(grunt) {
     },
     manifest:{
       dest: '<%= dirs.staging %>/step3/manifest.appcache',
-      port: 3001
+      port: 3002
     }
 
   });
