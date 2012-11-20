@@ -35,7 +35,7 @@ module.exports = function(grunt) {
       dev: {
         port: 3001,
         base: '<%= dirs.root %>',
-        keepalive: true
+        keepalive: false
       },
       build: {
         port: 3002,
@@ -49,12 +49,10 @@ module.exports = function(grunt) {
       }
     },
     reload: {
-      dev: {
-        port: 3000,
-        proxy: {
-            host: 'localhost',
-            port: '3001'
-        }
+      port: 3000,
+      proxy: {
+          host: 'localhost',
+          port: '3001'
       }
     },
     
@@ -92,8 +90,18 @@ module.exports = function(grunt) {
     //
     ////////////////////////////////
     watch: {
+      options: {
+        debounceDelay: 1000,
+        spawn: false,
+        rewatch: true,
+        forceWatchMethod: 'new'
+      },
       html: {
-        files: ['<config:lint.files>','<%= dirs.root %>/*.html'],
+        files: ['<%= dirs.root %>/**/*.html'],
+        tasks: ['reload']
+      },
+      js: {
+        files: ['<%= dirs.root %>/js/**/*.js'],
         tasks: 'reload'
       },
       compass: {
@@ -153,6 +161,7 @@ module.exports = function(grunt) {
          dest:  "<%= dirs.staging %>/step2/",
          src: [
            "<%= dirs.staging %>/step1/*",
+           "<%= dirs.staging %>/step1/partials/**",
            "<%= dirs.staging %>/step1/**/*.min.*",
            "!<%= dirs.staging %>/step1/lib/angular/angular-*.js",
            "<%= dirs.staging %>/step1/ico/**"
@@ -245,7 +254,7 @@ module.exports = function(grunt) {
 
   ]);
   
-  grunt.registerTask('dev', [/*'jshint',*/ 'compass:dev', 'reload:dev', 'server:dev', 'watch']);
+  grunt.registerTask('dev', [/*'jshint', 'compass:dev',*/ 'server:dev', 'reload' , 'watch']);
   //grunt.registerTask('reload:safe', 'wait:10 reload wait:10');
 
   grunt.registerTask('dist', ['server:dist']);
