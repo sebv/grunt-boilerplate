@@ -2,12 +2,11 @@
 
 ## Working
 
+- grunt dev (http://localhost:3000)
 - grunt build (build process similar to Yeoman).
-
-## In progress
-
-- grunt dev
+- grunt dist (http://localhost:3000) 
 
 ## Todo
 
 - grunt test
+

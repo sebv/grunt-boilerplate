@@ -106,8 +106,8 @@ module.exports = function(grunt) {
       },
       compass: {
         files: [ '<%= dirs.sass %>/*.sass' ],
-        tasks: [ 'compass:dev', 'reload' ]
-      }
+        tasks: [ 'compass:dev', 'reload']
+      },
     },
     jshint: {
       options: {
@@ -254,7 +254,7 @@ module.exports = function(grunt) {
 
   ]);
   
-  grunt.registerTask('dev', [/*'jshint', 'compass:dev',*/ 'server:dev', 'reload' , 'watch']);
+  grunt.registerTask('dev', [/*'jshint',*/ 'compass:dev', 'server:dev', 'reload' , 'watch']);
   //grunt.registerTask('reload:safe', 'wait:10 reload wait:10');
 
   grunt.registerTask('dist', ['server:dist']);

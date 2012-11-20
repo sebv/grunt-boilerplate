@@ -26,5 +26,7 @@
     "grunt-contrib-htmlmin": "git://github.com/sebv/grunt-contrib-htmlmin.git",
     "grunt-contrib-concat": "~0.1.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "moment": "~1.7.2"
+  }
 }
