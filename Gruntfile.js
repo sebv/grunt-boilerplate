@@ -33,19 +33,25 @@ module.exports = function(grunt) {
     
     server: {
       dev: {
-        port: 3001,
-        base: '<%= dirs.root %>',
-        keepalive: false
+        options: {
+          port: 3001,
+          base: '<%= dirs.root %>',
+          keepalive: false
+        }
       },
       build: {
-        port: 3002,
-        base: '<%= dirs.staging %>/step3',
-        keepalive: false
+        options: {
+          port: 3002,
+          base: '<%= dirs.staging %>/step3',
+          keepalive: false
+        }
       },
       dist: {
-        port: 3000,
-        base: '<%= dirs.dist %>/public',
-        keepalive: true
+        options: {
+          port: 3000,
+          base: '<%= dirs.dist %>/public',
+          keepalive: true
+        }
       }
     },
     reload: {
