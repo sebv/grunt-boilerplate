@@ -14,7 +14,6 @@
     "grunt-compass": "~0.3.7",
     "grunt-contrib-mincss": "~0.3.2",
     "grunt-contrib-clean": "~0.3.1",
-    "grunt-contrib-copy": "git://github.com/gruntjs/grunt-contrib-copy.git#devel",
     "grunt-contrib-rev": "git://github.com/sebv/grunt-contrib-rev.git",
     "grunt-contrib-imagemin": "git://github.com/sebv/grunt-contrib-imagemin.git",
     "grunt-contrib-usemin": "git://github.com/sebv/grunt-contrib-usemin.git",
@@ -24,7 +23,9 @@
     "grunt-contrib-jshint": "~0.1.0",
     "grunt-contrib-watch": "git://github.com/sebv/grunt-contrib-watch.git",
     "grunt-contrib-htmlmin": "git://github.com/sebv/grunt-contrib-htmlmin.git",
-    "grunt-contrib-concat": "~0.1.1"
+    "grunt-contrib-concat": "~0.1.1",
+    "grunt-cli": "git://github.com/sebv/grunt-cli.git",
+    "grunt-contrib-copy": "git://github.com/ctalkington/grunt-contrib-copy.git#patch2"
   },
   "dependencies": {
     "moment": "~1.7.2"

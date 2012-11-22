@@ -160,29 +160,41 @@ module.exports = function(grunt) {
     },
     copy: {
       'dist-step-1': {
-         dest: '<%= dirs.staging %>/step1/',
-         src: ['<%= dirs.root %>/**','!<%= dirs.root %>/css/**']
+         options: {
+           cwd: '<%= dirs.root %>'
+         },
+         src: ['**','!css/**'],
+         dest: '<%= dirs.staging %>/step1/'
       },
       'dist-step-2': {
-         dest:  "<%= dirs.staging %>/step2/",
+         options: {
+           cwd: '<%= dirs.staging %>/step1'
+         },
          src: [
-           "<%= dirs.staging %>/step1/*",
-           "<%= dirs.staging %>/step1/partials/**",
-           "<%= dirs.staging %>/step1/**/*.min.*",
-           "!<%= dirs.staging %>/step1/lib/angular/angular-*.js",
-           "<%= dirs.staging %>/step1/ico/**"
-         ]
+           "*",
+           "partials/**",
+           "**/*.min.*",
+           "!lib/angular/angular-*.js",
+           "ico/**"
+         ],
+         dest:  "<%= dirs.staging %>/step2/"
       },
       'dist-step-3': {
-         dest:  "<%= dirs.staging %>/step3/",
+         options: {
+           cwd: '<%= dirs.staging %>/step2'
+         },
          src: [
-           "<%= dirs.staging %>/step2/**",
-           "!<%= dirs.staging %>/step2/**/*.html"
-         ]
+           "**",
+           "!**/*.html"
+         ],
+         dest:  "<%= dirs.staging %>/step3/"
       },
       'dist-final': {
-         dest:  "<%= dirs.dist %>/public/",
-         src: ["<%= dirs.staging %>/step3/**"]
+         options: {
+           cwd: '<%= dirs.staging %>/step3'
+         },
+         src: ["**"],
+         dest:  "<%= dirs.dist %>/public/"
       }
     },
     'usemin-handler': {
@@ -216,10 +228,11 @@ module.exports = function(grunt) {
       dist: {
         options: {
           removeComments: true,
-          collapseWhitespace: true
+          collapseWhitespace: true,
+          cwd: '<%= dirs.staging %>/step2'
         },
         files: {
-          '<%= dirs.staging %>/step3/': '<%= dirs.staging %>/step2/**/*.html'
+          '<%= dirs.staging %>/step3/': '**/*.html'
         }
       }
     },
