@@ -7,22 +7,21 @@ grunt dev
 ```
 
 This will start a server at port 3001 and a reload proxy at port 3000.
-To check the site with reload enabbled browse to: http://localhost:3000
+To check the site with reload enabled, browse to: http://localhost:3000
 
-## build / dist
+## build
 
 ```
 grunt build
 ```
 
-The following starts a dist server at port 3003 
+## dist site  
 
 ```
 grunt dist
 ```
 
 To check the dist site browse to: http://localhost:3003
-
 
 ## test
 
