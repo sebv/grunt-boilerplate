@@ -51,7 +51,7 @@ Manually point a browser to http://localhost:4000 for the tests to run.
 ```
 ./bin/grunt test:e2e 
 # or
-./bin/grunt test:e2e-dev
+./bin/grunt test:e2e:dev
 ```
 
 This will run e2e tests against the dev site.
@@ -59,6 +59,6 @@ This will run e2e tests against the dev site.
 To run the test against the dist site do the following:
 
 ```
-./bin/grunt test:e2e-dist
+./bin/grunt test:e2e:dist
 ```
 

@@ -65,7 +65,7 @@ module.exports = function(grunt) {
         options: {
           port: 3004,
           base: '<%= dirs.dist %>/public',
-          keepalive: true
+          keepalive: false
         }
       },
     },
@@ -313,16 +313,16 @@ module.exports = function(grunt) {
 
   ]);
   
-  grunt.registerTask('dev', [/*'jshint',*/ 'compass:dev', 'server:dev', 'reload' , 'watch']);
+  grunt.registerTask('dev', [/*'jshint',*/ 'compass:dev', 'server:dev', 'reload', 'watch']);
   //grunt.registerTask('reload:safe', 'wait:10 reload wait:10');
 
   grunt.registerTask('dist', ['server:dist']);
 
   grunt.registerTask('test:auto', ['testacularServer:auto']);
   grunt.registerTask('test:unit', ['testacularServer:unit']);
-  grunt.registerTask('test:e2e-dev', ['server:e2e-dev','testacularServer:e2e']);
-  grunt.registerTask('test:e2e-dist', ['build','server:e2e-dev','testacularServer:e2e']);
-  grunt.registerTask('test:e2e', ['test:e2e-dev']);
+  grunt.registerTask('test:e2e:dev', ['server:e2e-dev','testacularServer:e2e']);
+  grunt.registerTask('test:e2e:dist', ['server:e2e-dist','testacularServer:e2e']);
+  grunt.registerTask('test:e2e', ['test:e2e:dev']);
   grunt.registerTask('test', ['test:unit']);
   
   grunt.registerTask('wait', 'Wait for a set amount of time(ms).', function(delay) {
