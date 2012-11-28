@@ -39,8 +39,10 @@ grunt test
 grunt test:auto 
 ```
 
-This will start a testacular server on port 4000. You need to manually
-point a browser to http://localhost:4000 for the tests to run
+This will start a testacular server on port 4000, and will run the unit tests on js 
+file changes.
+
+Manually point a browser to http://localhost:4000 for the tests to run.
 
 ### e2e
 
