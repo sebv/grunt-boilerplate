@@ -30,9 +30,7 @@ To check the dist site browse to: http://localhost:3003
 
 ```
 grunt test:unit 
-
 # or
-
 grunt test
 ```
 
@@ -49,9 +47,7 @@ point a browser to http://localhost:4000 for the tests to run
 
 ```
 grunt test:e2e 
-
 # or
-
 grunt test:e2e-dev
 ```
 
