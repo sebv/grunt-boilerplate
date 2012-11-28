@@ -15,7 +15,7 @@ To check the site with reload enabbled browse to: http://localhost:3000
 grunt build
 ```
 
-The following start a dist server at port 3003 
+The following starts a dist server at port 3003 
 
 ```
 grunt dist
