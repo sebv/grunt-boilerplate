@@ -25,7 +25,8 @@
     "grunt-contrib-htmlmin": "git://github.com/sebv/grunt-contrib-htmlmin.git",
     "grunt-contrib-concat": "~0.1.1",
     "grunt-cli": "git://github.com/sebv/grunt-cli.git",
-    "grunt-contrib-copy": "git://github.com/ctalkington/grunt-contrib-copy.git#patch2"
+    "grunt-contrib-copy": "git://github.com/ctalkington/grunt-contrib-copy.git#patch2",
+    "grunt-testacular": "~0.2.2"
   },
   "dependencies": {
     "moment": "~1.7.2"

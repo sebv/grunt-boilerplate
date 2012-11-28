@@ -23,7 +23,8 @@ module.exports = function(grunt) {
       root: 'app/public',
       staging: 'temp/staging',
       dist: 'dist',
-      sass: 'app/sass'
+      sass: 'app/sass',
+      test: 'test'
     },
     ///////////////////////////////
     //
@@ -48,11 +49,25 @@ module.exports = function(grunt) {
       },
       dist: {
         options: {
-          port: 3000,
+          port: 3003,
           base: '<%= dirs.dist %>/public',
           keepalive: true
         }
-      }
+      },
+      'e2e-dev': {
+        options: {
+          port: 3004,
+          base: '<%= dirs.root %>',
+          keepalive: false
+        }
+      },
+      'e2e-dist': {
+        options: {
+          port: 3004,
+          base: '<%= dirs.dist %>/public',
+          keepalive: true
+        }
+      },
     },
     reload: {
       port: 3000,
@@ -239,8 +254,32 @@ module.exports = function(grunt) {
     manifest:{
       dest: '<%= dirs.staging %>/step3/manifest.appcache',
       port: 3002
+    },
+    testacularServer: {
+      // manually open a browser window at http://localhost:4000 
+      auto: {
+        options: {
+          keepalive: true
+        },
+        browsers: undefined,
+        port: 4000,
+        autoWatch: true,
+        singleRun: false,
+        configFile: 'config/testacular.conf.js'
+      },
+      unit: {
+        options: {
+          keepalive: true
+        },
+        configFile: 'config/testacular.conf.js'
+      },
+      e2e: {
+        options: {
+          keepalive: true
+        },
+        configFile: 'config/testacular-e2e.conf.js'
+      }
     }
-
   });
 
   grunt.loadNpmTasks('grunt-contrib-clean');
@@ -259,6 +298,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-imagemin');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-contrib-manifest');
+  grunt.loadNpmTasks('grunt-testacular');
 
   // Default task.
   grunt.registerTask('default', 'dev');
@@ -278,6 +318,13 @@ module.exports = function(grunt) {
 
   grunt.registerTask('dist', ['server:dist']);
 
+  grunt.registerTask('test:auto', ['testacularServer:auto']);
+  grunt.registerTask('test:unit', ['testacularServer:unit']);
+  grunt.registerTask('test:e2e-dev', ['server:e2e-dev','testacularServer:e2e']);
+  grunt.registerTask('test:e2e-dist', ['build','server:e2e-dev','testacularServer:e2e']);
+  grunt.registerTask('test:e2e', ['test:e2e-dev']);
+  grunt.registerTask('test', ['test:unit']);
+  
   grunt.registerTask('wait', 'Wait for a set amount of time(ms).', function(delay) {
     if (delay) { 
       var done = this.async();
@@ -291,5 +338,4 @@ module.exports = function(grunt) {
   });
 
   grunt.renameTask('connect', 'server');
-
 };

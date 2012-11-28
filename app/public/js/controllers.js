@@ -15,8 +15,3 @@ function WelcomeCtrl($scope) {
 }
 WelcomeCtrl.$inject = ['$scope'];
 
-/*
-function MyCtrl2() {
-}
-MyCtrl2.$inject = [];
-*/

@@ -2,30 +2,16 @@
 
 /* jasmine specs for controllers go here */
 
-describe('MyCtrl1', function(){
-  var myCtrl1;
+describe('WelcomeCtrl', function(){
+  var welcomeCtrl;
 
-  beforeEach(function(){
-    myCtrl1 = new MyCtrl1();
-  });
-
-
-  it('should ....', function() {
-    //spec body
-  });
-});
-
-
-describe('MyCtrl2', function(){
-  var myCtrl2;
-
-
-  beforeEach(function(){
-    myCtrl2 = new MyCtrl2();
-  });
-
+  beforeEach(inject(function($rootScope) {
+    var $scope = $rootScope.$new();
+    welcomeCtrl = new WelcomeCtrl($scope);
+  }));
 
   it('should ....', function() {
     //spec body
   });
 });
+
