@@ -5,7 +5,9 @@ Note: For the moment use `./bin/grunt` instead of `grunt`.
 ## dev
 
 ```
-./bin/grunt dev 
+./bin/grunt dev
+# or
+./bin/grunt
 ```
 
 This will start a server at port 3001 and a reload proxy at port 3000.
@@ -31,14 +33,14 @@ To check the dist site browse to: http://localhost:3003
 
 ```
 ./bin/grunt test:unit 
-# or
-./bin/grunt test
 ```
 
 ### auto test
 
 ```
 ./bin/grunt test:auto 
+# or
+./bin/grunt test
 ```
 
 This will start a testacular server on port 4000, and will run the unit tests on js 

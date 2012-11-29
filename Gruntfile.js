@@ -323,7 +323,7 @@ module.exports = function(grunt) {
   grunt.registerTask('test:e2e:dev', ['server:e2e-dev','testacularServer:e2e']);
   grunt.registerTask('test:e2e:dist', ['server:e2e-dist','testacularServer:e2e']);
   grunt.registerTask('test:e2e', ['test:e2e:dev']);
-  grunt.registerTask('test', ['test:unit']);
+  grunt.registerTask('test', ['test:auto']);
   
   grunt.registerTask('wait', 'Wait for a set amount of time(ms).', function(delay) {
     if (delay) { 
