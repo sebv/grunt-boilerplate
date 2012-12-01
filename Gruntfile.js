@@ -85,23 +85,21 @@ module.exports = function(grunt) {
     
     compass: {
       dev: {
+        options: {
           config: '<%= dirs.sass %>/config.rb',
-          src: '<%= dirs.sass %>',
-          specify: '<%= dirs.sass %>/main.sass',
-          dest: '<%= dirs.root %>/css',
-          linecomments: true,
-          forcecompile: false,
-          debugsass: false
+          sassDir: '<%= dirs.sass %>',
+          cssDir: '<%= dirs.root %>/css',
+          environment: 'development',
+        }
       },
       dist: {
+        options: {
           config: '<%= dirs.sass %>/config.rb',
-          src: '<%= dirs.sass %>',
-          specify: '<%= dirs.sass %>/main.sass',
-          dest: '<%= dirs.staging %>/step1/css',
-          outputstyle: 'compressed',
-          linecomments: false,
-          forcecompile: true,
-          debugsass: false
+          sassDir: '<%= dirs.sass %>',
+          cssDir: '<%= dirs.staging %>/step1/css',
+          environment: 'production',
+          force: true
+        }
       }
     },
 
@@ -290,7 +288,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-reload');
-  grunt.loadNpmTasks( 'grunt-compass');
+  grunt.loadNpmTasks('grunt-contrib-compass');
   grunt.loadNpmTasks('grunt-contrib-mincss');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-usemin');
