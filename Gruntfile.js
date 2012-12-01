@@ -24,7 +24,7 @@ module.exports = function(grunt) {
       staging: 'temp/staging',
       dist: 'dist',
       sass: 'app/sass',
-      test: 'test'
+      test: 'app/test'
     },
     ///////////////////////////////
     //
@@ -162,8 +162,30 @@ module.exports = function(grunt) {
     ////////////////////////////////
 
 
-    qunit: {
-      files: ['test/**/*.html']
+    testacularServer: {
+      // manually open a browser window at http://localhost:4000 
+      auto: {
+        options: {
+          keepalive: true
+        },
+        browsers: undefined,
+        port: 4000,
+        autoWatch: true,
+        singleRun: false,
+        configFile: '<%= dirs.test %>/config/testacular.conf.js'
+      },
+      unit: {
+        options: {
+          keepalive: true
+        },
+        configFile: '<%= dirs.test %>/config/testacular.conf.js'
+      },
+      e2e: {
+        options: {
+          keepalive: true
+        },
+        configFile: '<%= dirs.test %>/config/testacular-e2e.conf.js'
+      }
     },
 
     /////////////////////////////////
@@ -255,31 +277,6 @@ module.exports = function(grunt) {
     manifest:{
       dest: '<%= dirs.staging %>/step3/manifest.appcache',
       port: 3002
-    },
-    testacularServer: {
-      // manually open a browser window at http://localhost:4000 
-      auto: {
-        options: {
-          keepalive: true
-        },
-        browsers: undefined,
-        port: 4000,
-        autoWatch: true,
-        singleRun: false,
-        configFile: 'config/testacular.conf.js'
-      },
-      unit: {
-        options: {
-          keepalive: true
-        },
-        configFile: 'config/testacular.conf.js'
-      },
-      e2e: {
-        options: {
-          keepalive: true
-        },
-        configFile: 'config/testacular-e2e.conf.js'
-      }
     }
   });
 
