@@ -85,6 +85,7 @@ module.exports = function(grunt) {
     
     compass: {
       options: {
+        sassDir: '<%= dirs.sass %>',
         raw:  'images_dir = "app/public/img"\n' +
               'http_images_path = "../img"\n' +
               'http_javascripts_path = "../js"\n' +
@@ -92,16 +93,12 @@ module.exports = function(grunt) {
       },
       dev: {
         options: {
-          //config: '<%= dirs.sass %>/config.rb',
-          sassDir: '<%= dirs.sass %>',
           cssDir: '<%= dirs.root %>/css',
           environment: 'development',
         }
       },
       dist: {
         options: {
-          //config: '<%= dirs.sass %>/config.rb',
-          sassDir: '<%= dirs.sass %>',
           cssDir: '<%= dirs.staging %>/step1/css',
           environment: 'production',
           force: true
