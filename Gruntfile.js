@@ -1,7 +1,7 @@
 'use strict';
 
 var path = require('path');
-/*global module:false*/
+
 module.exports = function(grunt) {
 
   // Project configuration.
