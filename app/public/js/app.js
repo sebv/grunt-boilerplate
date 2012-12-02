@@ -1,3 +1,5 @@
+/*global WelcomeCtrl:false*/
+
 'use strict';
 
 

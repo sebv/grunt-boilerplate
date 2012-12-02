@@ -1,3 +1,5 @@
+/*global require:false, module:false*/
+
 'use strict';
 
 var path = require('path');
@@ -67,7 +69,7 @@ module.exports = function(grunt) {
           base: '<%= dirs.dist %>/public',
           keepalive: false
         }
-      },
+      }
     },
     reload: {
       port: 3000,
@@ -94,7 +96,7 @@ module.exports = function(grunt) {
       dev: {
         options: {
           cssDir: '<%= dirs.root %>/css',
-          environment: 'development',
+          environment: 'development'
         }
       },
       dist: {
@@ -124,37 +126,39 @@ module.exports = function(grunt) {
       },
       js: {
         files: ['<%= dirs.root %>/js/**/*.js'],
-        tasks: 'reload'
+        tasks: ['jshint:dev', 'reload']
       },
       compass: {
         files: [ '<%= dirs.sass %>/*.sass' ],
         tasks: [ 'compass:dev', 'reload']
-      },
+      }
     },
+
     jshint: {
       options: {
-        curly: true,
-        eqeqeq: true,
-        immed: true,
-        latedef: true,
-        newcap: true,
-        noarg: true,
-        sub: true,
-        undef: true,
-        boss: true,
-        eqnull: true,
-        browser: true,
-        //globalstrict: true,
-        globals: {
-          require: true,
-          angular: true,
-        }
+        jshintrc: './.jshintrc'
       },
-      all: [  'Gruntfile.js', 
-                '<%= dirs.root %>/js/**/*.js' 
-           ]
+      dist: [ 'Gruntfile.js', 
+              '<%= dirs.root %>/js/**/*.js' 
+           ],
+      'test-unit': ['<%= jshint.dist %>','<%= dirs.test %>/unit/**/*.js'],
+      'test-e2e': ['<%= jshint.dist %>','<%= dirs.test %>/e2e/**/*.js'],
+      dev: {
+        options: {
+          warnOnly: true
+        },
+        src: [ '<%= jshint.dist %>',
+               '<%= dirs.test %>/unit/**/*.js'
+             ]
+      },
+      all : {
+        src: [ '<%= jshint.dist %>',
+               '<%= dirs.test %>/unit/**/*.js',
+               '<%= dirs.test %>/e2e/**/*.js'
+             ]
+      }
     },
-    
+ 
     ///////////////////////////////
     //
     // Test 
@@ -303,23 +307,22 @@ module.exports = function(grunt) {
   
   // Build task
   grunt.registerTask('build', [
-      /*'jshint',*/ 'clean:dist',
+      'jshint:dist', 'clean:dist',
       'copy:dist-step-1', 'compass:dist', 'usemin-handler', 'concat', 'mincss', 'uglify', 'imgmin',
       'copy:dist-step-2', 'rev', 'usemin', 
       'copy:dist-step-3', 'htmlmin:dist', 'server:build', 'manifest',
       'copy:dist-final', 'time'
-
   ]);
   
-  grunt.registerTask('dev', [/*'jshint',*/ 'compass:dev', 'server:dev', 'reload', 'watch']);
+  grunt.registerTask('dev', ['jshint:dev', 'compass:dev', 'server:dev', 'reload', 'watch']);
   //grunt.registerTask('reload:safe', 'wait:10 reload wait:10');
 
   grunt.registerTask('dist', ['server:dist']);
 
   grunt.registerTask('test:auto', ['testacularServer:auto']);
-  grunt.registerTask('test:unit', ['testacularServer:unit']);
-  grunt.registerTask('test:e2e:dev', ['server:e2e-dev','testacularServer:e2e']);
-  grunt.registerTask('test:e2e:dist', ['server:e2e-dist','testacularServer:e2e']);
+  grunt.registerTask('test:unit', ['jshint:test-unit', 'testacularServer:unit']);
+  grunt.registerTask('test:e2e:dev', ['jshint:test-e2e', 'server:e2e-dev','testacularServer:e2e']);
+  grunt.registerTask('test:e2e:dist', ['jshint:test-e2e', 'server:e2e-dist','testacularServer:e2e']);
   grunt.registerTask('test:e2e', ['test:e2e:dev']);
   grunt.registerTask('test', ['test:auto']);
   

@@ -1,3 +1,5 @@
+/*global moment:false*/
+
 'use strict';
 
 /* Controllers */
