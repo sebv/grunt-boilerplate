@@ -126,36 +126,42 @@ module.exports = function(grunt) {
       },
       js: {
         files: ['<%= dirs.root %>/js/**/*.js'],
-        tasks: ['jshint:dev', 'reload']
+        tasks: ['jshint:dev', 'reload', 'wait:100' , 'testacularRun:auto']
       },
       compass: {
         files: [ '<%= dirs.sass %>/*.sass' ],
         tasks: [ 'compass:dev', 'reload']
+      },
+      'test-unit': {
+        files: ['<%= dirs.test %>/unit/**/*.js'],
+        tasks: ['jshint:dev', 'wait:100' , 'testacularRun:auto']
+      },
+      gruntfile: {
+        files: ['Gruntfile.js'],
+        tasks: ['wait:100', 'jshint:dev']
       }
+      
     },
 
     jshint: {
       options: {
         jshintrc: './.jshintrc'
       },
-      dist: [ 'Gruntfile.js', 
-              '<%= dirs.root %>/js/**/*.js' 
-           ],
-      'test-unit': ['<%= jshint.dist %>','<%= dirs.test %>/unit/**/*.js'],
-      'test-e2e': ['<%= jshint.dist %>','<%= dirs.test %>/e2e/**/*.js'],
+      gruntfile: ['Gruntfile.js'],
+      js: ['<%= dirs.root %>/js/**/*.js'],
+      'test-unit': ['<%= dirs.test %>/unit/**/*.js'],
+      'test-e2e': ['<%= dirs.test %>/e2e/**/*.js'],
       dev: {
         options: {
           warnOnly: true
         },
-        src: [ '<%= jshint.dist %>',
-               '<%= dirs.test %>/unit/**/*.js'
-             ]
+        src: [ '<%= jshint.gruntfile %>', 
+               '<%= jshint.js %>' ,
+               "<%= jshint['test-unit'] %>" ]
       },
-      all : {
-        src: [ '<%= jshint.dist %>',
-               '<%= dirs.test %>/unit/**/*.js',
-               '<%= dirs.test %>/e2e/**/*.js'
-             ]
+      build: {
+        src: [ '<%= jshint.gruntfile %>', 
+               '<%= jshint.js %>' ]
       }
     },
  
@@ -167,14 +173,14 @@ module.exports = function(grunt) {
 
 
     testacularServer: {
-      // manually open a browser window at http://localhost:4000 
       auto: {
+        // manually open a browser window at http://localhost:4000 
+        // test trigerred by watch task
         options: {
           keepalive: true
         },
-        browsers: undefined,
         port: 4000,
-        autoWatch: true,
+        runnerPort: 4001,
         singleRun: false,
         configFile: '<%= dirs.test %>/config/testacular.conf.js'
       },
@@ -182,13 +188,23 @@ module.exports = function(grunt) {
         options: {
           keepalive: true
         },
+        browsers: ['Chrome'],
         configFile: '<%= dirs.test %>/config/testacular.conf.js'
       },
       e2e: {
         options: {
           keepalive: true
         },
+        browsers: ['Chrome'],
         configFile: '<%= dirs.test %>/config/testacular-e2e.conf.js'
+      }
+    },
+    testacularRun: {
+      auto: {
+        options: {
+          nofail: true
+        },
+        runnerPort: 4001
       }
     },
 
@@ -307,7 +323,7 @@ module.exports = function(grunt) {
   
   // Build task
   grunt.registerTask('build', [
-      'jshint:dist', 'clean:dist',
+      'jshint:build', 'clean:dist',
       'copy:dist-step-1', 'compass:dist', 'usemin-handler', 'concat', 'mincss', 'uglify', 'imgmin',
       'copy:dist-step-2', 'rev', 'usemin', 
       'copy:dist-step-3', 'htmlmin:dist', 'server:build', 'manifest',
@@ -320,8 +336,10 @@ module.exports = function(grunt) {
   grunt.registerTask('dist', ['server:dist']);
 
   grunt.registerTask('test:auto', ['testacularServer:auto']);
-  grunt.registerTask('test:unit', ['jshint:test-unit', 'testacularServer:unit']);
-  grunt.registerTask('test:e2e:dev', ['jshint:test-e2e', 'server:e2e-dev','testacularServer:e2e']);
+  grunt.registerTask('test:unit', 
+    ['jshint:build', 'jshint:test-unit', 'testacularServer:unit']);
+  grunt.registerTask('test:e2e:dev', 
+    ['jshint:build', 'jshint:test-e2e', 'server:e2e-dev','testacularServer:e2e']);
   grunt.registerTask('test:e2e:dist', ['jshint:test-e2e', 'server:e2e-dist','testacularServer:e2e']);
   grunt.registerTask('test:e2e', ['test:e2e:dev']);
   grunt.registerTask('test', ['test:auto']);

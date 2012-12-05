@@ -26,7 +26,7 @@
     "grunt-contrib-concat": "~0.1.1",
     "grunt-cli": "git://github.com/sebv/grunt-cli.git",
     "grunt-contrib-copy": "git://github.com/ctalkington/grunt-contrib-copy.git#devel",
-    "grunt-testacular": "~0.2.2"
+    "grunt-testacular": "git://github.com/sebv/grunt-testacular.git#canary"
   },
   "dependencies": {
     "moment": "~1.7.2"

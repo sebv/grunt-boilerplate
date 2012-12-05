@@ -16,7 +16,7 @@ files = [
 autoWatch = false;
 
 // uncomment to automatically spawn browser
-browsers = ['Chrome'];
+browsers = [];
 
 // Auto run tests on start (when browsers are captured) and exit
 singleRun = true;

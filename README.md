@@ -13,6 +13,8 @@ Note: For the moment use `./bin/grunt` instead of `grunt`.
 This will start a server at port 3001 and a reload proxy at port 3000.
 To check the site with reload enabled, browse to: http://localhost:3000
 
+This will also trigger unit test if the `test:auto` server is running.
+
 ## build
 
 ```
@@ -43,10 +45,10 @@ To check the dist site browse to: http://localhost:3003
 ./bin/grunt test
 ```
 
-This will start a testacular server on port 4000, and will run the unit tests on js 
-file changes.
+This will start a testacular server on port 4000.  
 
-Manually point a browser to http://localhost:4000 for the tests to run.
+Run `./bin/grunt dev` and manually point a browser to
+http://localhost:4000 for the tests to be run.
 
 ### e2e
 
