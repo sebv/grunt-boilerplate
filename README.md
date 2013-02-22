@@ -1,7 +1,5 @@
 # A grunt 0.4 boilerplate.
 
-Note: For the moment use `./bin/grunt` instead of `grunt`.
-
 ## dev
 
 ```
@@ -10,8 +8,8 @@ Note: For the moment use `./bin/grunt` instead of `grunt`.
 ./bin/grunt
 ```
 
-This will start a server at port 3001 and a reload proxy at port 3000.
-To check the site with reload enabled, browse to: http://localhost:3000
+This will start a server at port 3001.
+To check the site with reload enabled, browse to: http://localhost:3001
 
 This will also trigger unit test if the `test:auto` server is running.
 
