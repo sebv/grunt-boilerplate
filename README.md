@@ -1,4 +1,4 @@
-# A grunt 0.4 boilerplate.
+# A grunt 0.4 boilerplate
 
 ## dev
 
