@@ -4,6 +4,12 @@
 
 var path = require('path');
 
+var lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
+
+var folderMount = function folderMount(connect, point) {
+  return connect['static'](path.resolve(point));
+};
+
 module.exports = function(grunt) {
 
   // Project configuration.
@@ -14,7 +20,7 @@ module.exports = function(grunt) {
     // Global Config
     //
     ////////////////////////////////
-    
+
     pkg: '<json:package.json>',
     banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
       '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
@@ -33,13 +39,19 @@ module.exports = function(grunt) {
     // Server/Reload
     //
     ////////////////////////////////
-    
+
     server: {
       dev: {
         options: {
           port: 3001,
           base: '<%= dirs.root %>',
-          keepalive: false
+          keepalive: false,
+          middleware: function(connect, options) {
+            return [
+              lrSnippet,
+              folderMount(connect, options.base)
+              ];
+          }
         }
       },
       build: {
@@ -71,20 +83,13 @@ module.exports = function(grunt) {
         }
       }
     },
-    reload: {
-      port: 3000,
-      proxy: {
-          host: 'localhost',
-          port: '3001'
-      }
-    },
-    
+
     ///////////////////////////////
     //
     // Compass
     //
     ////////////////////////////////
-    
+
     compass: {
       options: {
         sassDir: '<%= dirs.sass %>',
@@ -113,34 +118,32 @@ module.exports = function(grunt) {
     // Dev 
     //
     ////////////////////////////////
-    watch: {
-      options: {
-        debounceDelay: 1000,
-        spawn: false,
-        rewatch: true,
-        forceWatchMethod: 'new'
-      },
+    regarde: {
       html: {
         files: ['<%= dirs.root %>/**/*.html'],
-        tasks: ['reload']
+        tasks: ['livereload'],
+        spawn: false
       },
       js: {
         files: ['<%= dirs.root %>/js/**/*.js'],
-        tasks: ['jshint:dev', 'reload', 'wait:100' , 'testacularRun:auto']
+        tasks: ['jshint:dev', 'livereload', 'wait:100' , 'testacularRun:auto'],
+        spawn: false
       },
       compass: {
         files: [ '<%= dirs.sass %>/*.sass' ],
-        tasks: [ 'compass:dev', 'reload']
+        tasks: [ 'compass:dev', 'livereload'],
+        spawn: false
       },
       'test-unit': {
         files: ['<%= dirs.test %>/unit/**/*.js'],
-        tasks: ['jshint:dev', 'wait:100' , 'testacularRun:auto']
+        tasks: ['jshint:dev', 'wait:100' , 'testacularRun:auto'],
+        spawn: false
       },
       gruntfile: {
         files: ['Gruntfile.js'],
-        tasks: ['wait:100', 'jshint:dev']
+        tasks: ['wait:100', 'jshint:dev'],
+        spawn: false
       }
-      
     },
 
     jshint: {
@@ -152,9 +155,9 @@ module.exports = function(grunt) {
       'test-unit': ['<%= dirs.test %>/unit/**/*.js'],
       'test-e2e': ['<%= dirs.test %>/e2e/**/*.js'],
       dev: {
-        options: {
+        /*options: {
           warnOnly: true
-        },
+        },*/
         src: [ '<%= jshint.gruntfile %>', 
                '<%= jshint.js %>' ,
                "<%= jshint['test-unit'] %>" ]
@@ -164,7 +167,7 @@ module.exports = function(grunt) {
                '<%= jshint.js %>' ]
       }
     },
- 
+
     ///////////////////////////////
     //
     // Test 
@@ -172,39 +175,39 @@ module.exports = function(grunt) {
     ////////////////////////////////
 
 
-    testacularServer: {
+    testacular: {
       auto: {
         // manually open a browser window at http://localhost:4000 
         // test trigerred by watch task
         options: {
-          keepalive: true
-        },
-        port: 4000,
-        runnerPort: 4001,
-        singleRun: false,
-        configFile: '<%= dirs.test %>/config/testacular.conf.js'
+          keepalive: true,
+          port: 4000,
+          runnerPort: 4001,
+          singleRun: false,
+          configFile: '<%= dirs.test %>/config/testacular.conf.js'
+        }
       },
       unit: {
         options: {
-          keepalive: true
-        },
-        browsers: ['Chrome'],
-        configFile: '<%= dirs.test %>/config/testacular.conf.js'
+          keepalive: true,
+          browsers: ['Chrome'],
+          configFile: '<%= dirs.test %>/config/testacular.conf.js'
+        }
       },
       e2e: {
         options: {
-          keepalive: true
-        },
-        browsers: ['Chrome'],
-        configFile: '<%= dirs.test %>/config/testacular-e2e.conf.js'
+          keepalive: true,
+          browsers: ['Chrome'],
+          configFile: '<%= dirs.test %>/config/testacular-e2e.conf.js'
+        }
       }
     },
     testacularRun: {
       auto: {
         options: {
-          nofail: true
-        },
-        runnerPort: 4001
+          runnerPort: 4001
+          //nofail: true
+        }
       }
     },
 
@@ -218,16 +221,14 @@ module.exports = function(grunt) {
     },
     copy: {
       'dist-step-1': {
-         options: {
-           cwd: '<%= dirs.root %>'
-         },
+         expand: true,
+         cwd: '<%= dirs.root %>',
          src: ['**','!css/**'],
          dest: '<%= dirs.staging %>/step1/'
       },
       'dist-step-2': {
-         options: {
-           cwd: '<%= dirs.staging %>/step1'
-         },
+         expand: true,
+         cwd: '<%= dirs.staging %>/step1',
          src: [
            "*",
            "partials/**",
@@ -238,9 +239,8 @@ module.exports = function(grunt) {
          dest:  "<%= dirs.staging %>/step2/"
       },
       'dist-step-3': {
-         options: {
-           cwd: '<%= dirs.staging %>/step2'
-         },
+         expand: true,
+         cwd: '<%= dirs.staging %>/step2',
          src: [
            "**",
            "!**/*.html"
@@ -248,50 +248,54 @@ module.exports = function(grunt) {
          dest:  "<%= dirs.staging %>/step3/"
       },
       'dist-final': {
-         options: {
-           cwd: '<%= dirs.staging %>/step3'
-         },
+         expand: true,
+         cwd: '<%= dirs.staging %>/step3',
          src: ["**"],
          dest:  "<%= dirs.dist %>/public/"
       }
     },
-    'usemin-handler': {
+    'useminPrepare': {
       options: {
-        basePath: '<%= dirs.staging %>/step1'
+        dest: '<%= dirs.staging %>/step2'
       },
-      html: '*.html'
+      html: '<%= dirs.staging %>/step1/*.html'
     },
-    imgmin: {
-      options: {
-        basePath: '<%= dirs.staging %>/step1'
-      },
-      img: 'img/**'
+    imagemin: {
+      dist: {
+        expand: true,
+        cwd: '<%= dirs.staging %>/step1',
+        src: 'img/**',
+        dest: '<%= dirs.staging %>/step2/'
+      }
     },
     usemin: {
       options: {
-        basePath: '<%= dirs.staging %>/step2'
+        basedir: '<%= dirs.staging %>/step2'
       },
-      html: ['**/*.html'],
-      css: ['**/*.css']
+      html: {
+        expand:true,
+        cwd: '<%= dirs.staging %>/step2',
+        src:['**/*.{html,css}']}
     },
     rev: {
-      options: {
-        basePath: '<%= dirs.staging %>/step2'
-      },
-      js: ['js/**/*.js', '!js/vendor/*.js'],
-      css: 'css/**/*.css',
-      img: 'img/**'
+      files: {
+        expand: true,
+        cwd: '<%= dirs.staging %>/step2',
+        src: [  'js/**/*.js', '!js/vendor/*.js',
+                'css/**/*.css',
+                'img/**/*.{png,jpg}']
+      }
     },
     htmlmin: {
       dist: {
         options: {
           removeComments: true,
-          collapseWhitespace: true,
-          cwd: '<%= dirs.staging %>/step2'
+          collapseWhitespace: true
         },
-        files: {
-          '<%= dirs.staging %>/step3/': '**/*.html'
-        }
+        expand: true,
+        cwd: '<%= dirs.staging %>/step2',
+        src: '**/*.html',
+        dest: '<%= dirs.staging %>/step3/'
       }
     },
     manifest:{
@@ -306,13 +310,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-reload');
+  grunt.loadNpmTasks('grunt-regarde');
+  grunt.loadNpmTasks('grunt-contrib-livereload');
   grunt.loadNpmTasks('grunt-contrib-compass');
-  grunt.loadNpmTasks('grunt-contrib-mincss');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-usemin');
-  grunt.loadNpmTasks('grunt-contrib-rev');
+  grunt.loadNpmTasks('grunt-usemin');
+  grunt.loadNpmTasks('grunt-rev');
   grunt.loadNpmTasks('grunt-contrib-imagemin');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-contrib-manifest');
@@ -320,30 +324,29 @@ module.exports = function(grunt) {
 
   // Default task.
   grunt.registerTask('default', 'dev');
-  
+
   // Build task
   grunt.registerTask('build', [
       'jshint:build', 'clean:dist',
-      'copy:dist-step-1', 'compass:dist', 'usemin-handler', 'concat', 'mincss', 'uglify', 'imgmin',
-      'copy:dist-step-2', 'rev', 'usemin', 
-      'copy:dist-step-3', 'htmlmin:dist', 'server:build', 'manifest',
+      'copy:dist-step-1', 'compass:dist', 'useminPrepare', 'concat', 'cssmin', 'uglify', 
+      'copy:dist-step-2', 'imagemin', 'rev', 'usemin',
+      'copy:dist-step-3' , 'htmlmin:dist', 'server:build', 'manifest',
       'copy:dist-final', 'time'
   ]);
-  
-  grunt.registerTask('dev', ['jshint:dev', 'compass:dev', 'server:dev', 'reload', 'watch']);
-  //grunt.registerTask('reload:safe', 'wait:10 reload wait:10');
+
+  grunt.registerTask('dev', ['jshint:dev', 'compass:dev', 'livereload-start' , 'server:dev', 'regarde']);
 
   grunt.registerTask('dist', ['server:dist']);
 
-  grunt.registerTask('test:auto', ['testacularServer:auto']);
+  grunt.registerTask('test:auto', ['testacular:auto']);
   grunt.registerTask('test:unit', 
-    ['jshint:build', 'jshint:test-unit', 'testacularServer:unit']);
+    ['jshint:build', 'jshint:test-unit', 'testacular:unit']);
   grunt.registerTask('test:e2e:dev', 
-    ['jshint:build', 'jshint:test-e2e', 'server:e2e-dev','testacularServer:e2e']);
-  grunt.registerTask('test:e2e:dist', ['jshint:test-e2e', 'server:e2e-dist','testacularServer:e2e']);
+    ['jshint:build', 'jshint:test-e2e', 'server:e2e-dev','testacular:e2e']);
+  grunt.registerTask('test:e2e:dist', ['jshint:test-e2e', 'server:e2e-dist','testacular:e2e']);
   grunt.registerTask('test:e2e', ['test:e2e:dev']);
   grunt.registerTask('test', ['test:auto']);
-  
+
   grunt.registerTask('wait', 'Wait for a set amount of time(ms).', function(delay) {
     if (delay) { 
       var done = this.async();
